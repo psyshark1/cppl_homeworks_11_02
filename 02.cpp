@@ -12,6 +12,7 @@ public:
 	friend big_integer operator *(big_integer& lhs, big_integer& rhs);
 	friend big_integer operator +(big_integer& lhs, big_integer& rhs);
 	big_integer& operator = (const big_integer& bi);
+	big_integer& operator = (big_integer&& rbi) noexcept;
 	std::string get_integer();
 
 private:
@@ -40,7 +41,6 @@ big_integer::big_integer(big_integer&& rbi) noexcept
 {
 	this->bint = rbi.bint;
 	rbi.bint = nullptr;
-	rbi.~big_integer();
 }
 
 void big_integer::assign(const std::string& s)
@@ -185,7 +185,6 @@ big_integer operator *(big_integer& lhs, big_integer& rhs)
 	}
 	//-------
 	std::reverse(result.begin(), result.end());
-	std::cout << result << std::endl;
 
 	for (unsigned short i = 0; i < rhs.bint->size(); ++i)
 	{
@@ -251,6 +250,17 @@ big_integer& big_integer::operator = (const big_integer& bi)
 	if (this != &bi) {
 		this->delete_ptr();
 		this->assign(*bi.bint);
+		return *this;
+	}
+	return *this;
+}
+
+big_integer& big_integer::operator = (big_integer&& rbi) noexcept
+{
+	if (this != &rbi) {
+		this->delete_ptr();
+		this->assign(*rbi.bint);
+		rbi.bint = nullptr;
 		return *this;
 	}
 	return *this;
