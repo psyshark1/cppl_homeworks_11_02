@@ -259,7 +259,7 @@ big_integer& big_integer::operator = (big_integer&& rbi) noexcept
 {
 	if (this != &rbi) {
 		this->delete_ptr();
-		this->assign(*rbi.bint);
+		this->bint = rbi.bint;
 		rbi.bint = nullptr;
 		return *this;
 	}
